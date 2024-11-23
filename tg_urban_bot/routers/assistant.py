@@ -43,7 +43,7 @@ async def assistant(message: Message) -> dict | str:
     result = await resp.json(encoding="utf-8")
 
     match result["agent_type"]:
-        case "simple":
+        case "support":
             return result["response"]
         case "urban":
             if corr := result["response"]["correction"]:
@@ -68,6 +68,8 @@ async def assistant(message: Message) -> dict | str:
 Год основания и страна: {report["add_info"]["year"]}, {report["add_info"]["country"]}
 Проекты: {report["add_info"]["projects"]}
 """
+        case "others":
+            return "Я не могу ответить на данный вопрос..."
 
 
 @router.message(

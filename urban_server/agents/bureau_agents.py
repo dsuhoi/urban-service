@@ -2,20 +2,20 @@ from langchain_core.prompts import ChatPromptTemplate
 
 classifier_agent_schema = {
     "title": "classifier-bureaus",
-    "description": "Описание тегов, характеризующих заданное архитектурное бюро для его идентификации по возможным тегам пользователя.",
+    "description": "Description of tags characterizing a given architectural bureau for identification based on potential user-provided tags.",
     "type": "object",
     "properties": {
         "tags": {
-            "description": "Массив из тегов (число ЗАВИСИТ от объема информации, НЕ пиши лишних тегов).",
+            "description": "An array of tags (the number depends on the volume of information; do NOT include unnecessary tags).",
             "type": "array",
             "items": {
-                "description": "Тег, который должен быть не более 1-3 слов, которые было бы удобно перевести в эмбеддинги.\
-НЕ пиши очевидные теги [архиктура, градостроительство и т.п.], старайся выделить те, что могут отличать это бюро от других [НЕ пиши в тегах о наградах или конкретных проектах]",
+                "description": "A tag should consist of 1-3 words that can easily be converted into embeddings.\
+Avoid obvious tags like [architecture, urban planning, etc.]; instead, focus on those that distinguish this bureau from others [do NOT include awards or specific projects in the tags].",
                 "type": "string",
             },
             "minItems": 1,
             "maxItems": 5,
-        },
+        }
     },
     "required": ["tags"],
 }
@@ -23,22 +23,18 @@ classifier_agent_schema = {
 
 writer_agent_schema = {
     "title": "writer-bureau",
-    "description": "Выбрать лучшее арх. бюро из блока BUREAUS, которое соответствует запросу пользователя в INPUT.\
-Детально описать это лучшее бюро в отчете.",
+    "description": "Select the best architectural bureau from the BUREAUS block that matches the user's request from INPUT. Provide a detailed description of the selected bureau in the report.",
     "type": "object",
     "properties": {
-        "name": {"description": "Название лучшего бюро.", "type": "string"},
-        "descr": {
-            "description": "Краткое описание бюро и информация о том, как оно поможет пользователю с его запросом.",
+        "name": {"description": "The name of the best bureau.", "type": "string"},
+        "description": {
+            "description": "A brief description of the bureau and how it can assist the user with their request.",
             "type": "string",
         },
-        # "projects": {
-        #     "description": "Описание релевантных для пользователя проектов бюро. Если их нет, то ВСЕГДА выводи NULL.",
-        #     "type": ["string", "null"],
-        # },
     },
     "required": ["name", "descr"],
 }
+
 
 prompt_writer = ChatPromptTemplate.from_messages(
     [("user", "INPUT: {input}"), ("assistant", "BUREAUS: {bureaus}")]

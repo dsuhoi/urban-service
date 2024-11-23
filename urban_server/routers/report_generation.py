@@ -23,7 +23,7 @@ async def report(
 
     result = {
         "name": resp["name"],
-        "description": resp["descr"],
+        "description": resp["description"],
         "cite": best_bureau["cite"],
         "add_info": {
             "year": best_bureau["year"],

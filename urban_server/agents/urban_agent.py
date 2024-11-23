@@ -2,20 +2,19 @@ from langchain_core.prompts import ChatPromptTemplate
 
 urban_chooser_json_schema = {
     "title": "urban-chooser",
-    "description": "Заполнить форму на основе входного запроса на тему урбанистики для выбора лучшего арх. бюро. \
-Используй ТОЛЬКО информацию от пользователя (если нет достаточной информации, то выводи null по параметрам)!",
+    "description": "Fill out the form based on the input request related to urbanism to select the best architectural bureau. Use ONLY the information provided by the user (if insufficient information is available, return null for the respective parameters).",
     "type": "object",
     "properties": {
         "project_title": {
-            "description": "Название проекта (не более 4-5 слов) на основе запроса пользователя",
+            "description": "The title of the project (no more than 4-5 words) based on the user's request.",
             "type": "string",
         },
         "base_params": {
-            "description": "Основные параметры проекта.",
+            "description": "Key parameters of the project.",
             "type": "object",
             "properties": {
                 "function": {
-                    "description": "Функции объекта.",
+                    "description": "The function of the object.",
                     "type": ["string", "null"],
                     "enum": [
                         "Жилье",
@@ -35,7 +34,7 @@ urban_chooser_json_schema = {
                     ],
                 },
                 "area": {
-                    "description": "Площадь объекта (м^2).",
+                    "description": "The area of the object (m²).",
                     "type": ["number", "null"],
                     "minimum": 1.0,
                 },
@@ -43,12 +42,11 @@ urban_chooser_json_schema = {
             "required": ["function", "area"],
         },
         "criteria": {
-            "description": "Критерии выбора арх. бюро на основе пожелания пользователя по проекту!",
+            "description": "Selection criteria for the architectural bureau based on the user's project requirements.",
             "type": "object",
             "properties": {
                 "experience": {
-                    "description": "Необходимый опыт бюро. Опытные бюро (от 10 лет на рынке), \
-                    молодые имена (до 10 лет), опыт реализации проектов (если требуется опыт в конкретной области архитектуры).",
+                    "description": "Required experience of the bureau: established firms (10+ years on the market), young names (less than 10 years), specific project experience (if specific expertise is needed).",
                     "type": ["string", "null"],
                     "enum": [
                         "Опытные бюро",
@@ -58,16 +56,14 @@ urban_chooser_json_schema = {
                     ],
                 },
                 "altitude": {
-                    "description": "Специализация бюро по высотности зданий (150м, 50-150м или до 50м).",
+                    "description": "Specialization of the bureau by building height (150m+, 50-150m, or under 50m).",
                     "type": ["string", "null"],
-                    "enum": ["Высокие", "Средние", "Низкие"],
+                    "enum": ["High", "Medium", "Low"],
                 },
                 "tags": {
-                    "description": "Теги, которые могут характеризовать бюро для проекта.",
+                    "description": "Tags characterizing the bureau for the project.",
                     "type": "array",
-                    "items": {
-                        "type": "string",
-                    },
+                    "items": {"type": "string"},
                     "minItems": 3,
                     "maxItems": 5,
                 },
@@ -75,17 +71,16 @@ urban_chooser_json_schema = {
             "required": ["experience", "altitude", "tags"],
         },
         "correction": {
-            "description": "Используется при наличие null параметров или критериев и направлен на доп. вопросы к пользователю",
+            "description": "Used when there are null parameters or criteria and is intended for additional questions to the user.",
             "type": ["array", "null"],
             "items": {
-                "description": "Вопрос к пользователю для заполнения неизвестного (null) параметра или критерия (ОБЯЗАТЕЛЬНО).",
+                "description": "A question for the user to fill in an unknown (null) parameter or criterion (MANDATORY).",
                 "type": "string",
             },
         },
     },
     "required": ["project_title", "base_params", "criteria", "correction"],
 }
-
 prompt = ChatPromptTemplate.from_messages([("user", "INPUT: {input}")])
 
 

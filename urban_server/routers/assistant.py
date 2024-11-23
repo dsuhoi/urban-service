@@ -20,7 +20,9 @@ async def assistant(
     )
     if response["agent_type"] == "urban":
         result = await urban_llm.ainvoke({"input": input_data.input})
-    else:
+    elif response["agent_type"] == "support":
         result = response["response"]
+    else:
+        result = None
 
     return {"agent_type": response["agent_type"], "response": result}

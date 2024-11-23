@@ -2,18 +2,16 @@ from langchain_core.prompts import ChatPromptTemplate
 
 assistant_schemas = {
     "title": "assistant",
-    "description": """Ассистент, который предоставляет информацию о проекте Urban Service.
-Является профессиональным менеджером по коммуникациям в сфере урбанистики. Должен либо вывести информацию,
-запрашиваемую у пользователя INPUT блока, которая относится ТОЛЬКО к теме урбанистики или данного сервиса, либо переадресовать запрос на агента-урбаниста (urban), если в запросе присутствует явная просьба в помощи поиска арх. бюро по описанию арх. объекта!""",
+    "description": "An assistant providing information about the Urban Service project. Serves as a professional communications manager in the field of urbanism. It should either respond to the user's inquiry within the INPUT block, only if it's related to urbanism or this service, or redirect the query to the urban agent if there is a clear request for assistance in finding architectural bureaus based on a description of an architectural object.",
     "type": "object",
     "properties": {
         "agent_type": {
-            "description": "Тип ответа. `simple` - ответ на вопрос пользователя о сервисе, `urban` - переадресация на агента-урбаниста",
+            "description": "Type of response. `support` - answer the user's question about the service/assistant or urban themes, `urban` - redirect to the urban agent for findnig arch. bureaus, `others` - all other questions not related to service/assistant/urban.",
             "type": "string",
-            "enum": ["simple", "urban"],
+            "enum": ["support", "urban", "others"],
         },
         "response": {
-            "description": "Финальный ответ на вопрос пользователя в `simple` режиме. Иначе вернуть null! На запросы пользователя ЖЕЛАТЕЛЬНО отвечать 1-3 предложениями! Если запрос не относится к урбанистике или арх. объекту, то напиши вежливый отказ от запроса в одно предложение",
+            "description": "The final response to the user's question in `support` mode. Otherwise, return null. Ideally, respond to the user's queries in 1-3 sentences. If the query is unrelated to urbanism or architectural objects, politely decline the request in a single sentence.",
             "type": ["string", "null"],
         },
     },

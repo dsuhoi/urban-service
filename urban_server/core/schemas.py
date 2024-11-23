@@ -34,11 +34,11 @@ class UrbanQuestionResponse(BaseModel):
 
 
 class AssistentResponse(BaseModel):
-    agent_type: Literal["simple", "urban"] = Field(
-        description="Вид ответа. Simple - простой ответ ассистента, Urban - ответ от урбаниста."
+    agent_type: Literal["support", "urban", "others"] = Field(
+        description="Вид ответа. `support` - простой ответ ассистента, `urban` - ответ от урбаниста."
     )
-    response: UrbanQuestionResponse | str = Field(
-        description="Ответ либо от ассистента, либо от урбаниста."
+    response: UrbanQuestionResponse | str | None = Field(
+        description="Ответ либо от ассистента, либо от урбаниста.", default=None
     )
 
 
