@@ -1,0 +1,51 @@
+networks:
+  net:
+    driver: bridge
+
+services:
+  chromadb:
+    image: chromadb/chroma
+    container_name: chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./bureaus_db:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma
+      - ANONYMIZED_TELEMETRY=False
+    env_file:
+      - ./.chroma_env
+    networks:
+      - net
+
+  urban_server:
+    build: ./urban_server
+    # entrypoint: ["./wait-for-it.sh", "chromadb:8000", "--", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+    volumes:
+      - ./urban_server:/urban_server/
+      - ./urban_server/user_db:/user_db
+    ports:
+      - 8001:8001
+    environment:
+      - USER_DATABASE_URL=sqlite+aiosqlite:///user_db/users.db
+      - CHROMA_HOST=chromadb
+      - CHROMA_PORT=8000
+    env_file:
+      - ./.env
+      - ./.chroma_env
+    depends_on:
+      - chromadb
+    networks:
+      - net
+
+  tg_bot:
+    build: ./tg_urban_bot
+    environment:
+      - SERVER_URL=http://urban_server:8001
+    env_file:
+      - ./.env
+    depends_on:
+      - urban_server
+    networks:
+      - net

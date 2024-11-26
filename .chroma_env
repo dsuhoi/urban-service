@@ -1,0 +1,3 @@
+CHROMA_SERVER_AUTH_CREDENTIALS="test-token"
+CHROMA_SERVER_AUTH_PROVIDER="chromadb.auth.token_authn.TokenAuthenticationServerProvider"
+CHROMA_AUTH_TOKEN_TRANSPORT_HEADER="Authorization"
