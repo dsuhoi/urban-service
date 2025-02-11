@@ -1,5 +1,6 @@
 from typing import Annotated, Literal, Optional
 
+from fastapi import Form
 from pydantic import BaseModel, Field, StringConstraints
 
 
@@ -35,10 +36,10 @@ class UrbanQuestionResponse(BaseModel):
 
 class AssistentResponse(BaseModel):
     agent_type: Literal["support", "urban", "others"] = Field(
-        description="Вид ответа. `support` - простой ответ ассистента, `urban` - ответ от урбаниста."
+        description="Вид ответа. `support` - простой ответ ассистента, `urban` - ответ от урбаниста"
     )
     response: UrbanQuestionResponse | str | None = Field(
-        description="Ответ либо от ассистента, либо от урбаниста.", default=None
+        description="Ответ либо от ассистента, либо от урбаниста", default=None
     )
 
 
@@ -89,11 +90,20 @@ class VisualUrbanInput(BaseModel):
     input: Optional[str] = Field(description="Описание к фотографии арх. объекта")
 
 
-class AssistentVisualResponse(BaseModel):
-    is_building: bool = Field(description="Изображение относится к арх. объекту")
-    building_description: str | None = Field(
-        description="Описание арх. объекта на изображении"
-    )
+def parse_visual_form(input_data: str = Form(...)) -> VisualUrbanInput:
+    return VisualUrbanInput(input=input_data)
+
+
+class VisualResponse(BaseModel):
+    is_design: bool = Field(description="Изображение относится к арх. объекту")
+    description: str | None = Field(description="Описание арх. объекта на изображении")
     tags: list[str] = Field(
         description="Список из тегов, характеризующих арх. бюро для объекта"
     )
+
+
+class AssistentVisualResponse(BaseModel):
+    agent_type: Literal["visual"] = Field(
+        description="Фикс. тип агента для обработки изображений", default="visual"
+    )
+    response: VisualResponse = Field(description="Результат обработки изображения")

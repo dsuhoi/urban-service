@@ -1,13 +1,16 @@
 import asyncio
 
-from aiogram import Bot
+from aiogram import Bot, Dispatcher
 from aiogram.filters.command import Command
 from aiogram.types import BotCommand, Message
 
 import routers.assistant as assistant
+from config import CONFIG
 from core.auth import check_user, free_bonus, registration
-from core.bot import bot, dp
 from core.utils import COMMAND_LIST, description_meta
+
+bot = Bot(token=CONFIG.TG_TOKEN)
+dp = Dispatcher()
 
 dp.include_router(assistant.router)
 
