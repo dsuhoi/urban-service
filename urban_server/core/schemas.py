@@ -83,3 +83,17 @@ class BonusInput(BaseModel):
 
 class BonusResponse(BaseModel):
     content: str = Field(description="Бонус для тестирования API")
+
+
+class VisualUrbanInput(BaseModel):
+    input: Optional[str] = Field(description="Описание к фотографии арх. объекта")
+
+
+class AssistentVisualResponse(BaseModel):
+    is_building: bool = Field(description="Изображение относится к арх. объекту")
+    building_description: str | None = Field(
+        description="Описание арх. объекта на изображении"
+    )
+    tags: list[str] = Field(
+        description="Список из тегов, характеризующих арх. бюро для объекта"
+    )
