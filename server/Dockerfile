@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-WORKDIR /urban_server
+WORKDIR /server
 
 RUN apt-get update -y
 

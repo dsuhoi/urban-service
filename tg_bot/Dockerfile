@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-WORKDIR /cm_bot
+WORKDIR /tg_bot
 
 RUN apt-get update -y && apt-get install sqlite3 -y
 

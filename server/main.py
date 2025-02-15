@@ -1,11 +1,13 @@
+import time
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 
 from core.databases import init_chromadb, init_db
+from core.logger import setup_logger
 from routers import assistant, report_generation, users
 
 
@@ -15,6 +17,8 @@ async def on_startup(app: FastAPI):
     await init_chromadb()
     yield
 
+
+logger = setup_logger()
 
 app = FastAPI(
     title="Urban LLM Service",
@@ -31,6 +35,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    try:
+        response = await call_next(request)
+    except Exception as exc:
+        await logger.error(f"{request.method} {request.url}: {exc}")
+        raise
+    process_time = time.time() - start_time
+    await logger.info(
+        f"{request.method} {request.url} with time [{process_time:.2f} sec] with status_code={response.status_code}"
+    )
+    return response
+
 
 app.include_router(assistant.router)
 app.include_router(report_generation.router)

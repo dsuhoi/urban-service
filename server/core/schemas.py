@@ -16,12 +16,11 @@ class InputUrban(BaseModel):
 
 class BaseQuestionParams(BaseModel):
     function: str | None = Field(description="Функции объекта")
-    area: float | None = Field(description="Площадь объекта")
+    tags: list[str] | None = Field(description="Теги, характеризующие объект")
 
 
 class Criteria(BaseModel):
     experience: str | None = Field(description="Необходимый опыт арх. бюро")
-    altitude: str | None = Field(description="Класс высотности здания")
     tags: list[str] = Field(description="Набор тегов, характеризующих запрос")
 
 
@@ -80,6 +79,7 @@ class AboutUserResponse(BaseModel):
 
 class BonusInput(BaseModel):
     password: str = Field(description="Бонус для тестирования API")
+    count: Optional[int] = Field(description="Число запросов", gt=0)
 
 
 class BonusResponse(BaseModel):

@@ -36,15 +36,15 @@ async def status_checker(code: int, user_id: int) -> str | None:
         return "Запрос некорректный!"
 
 
-async def free_bonus(user_id: int, password: str | None = None):
+async def free_bonus(user_id: int, password: str | None = None, count: int = 10):
     password = "urban_bonus" if password is None else password
     resp = await aioreq._request(
         "/users/bonus_by_token",
         method="POST",
-        json={"password": password},
+        json={"password": password, "count": count},
         auth=tg_auth_cred(user_id),
     )
     if resp.status == 200:
-        return "Вам доступно ещё 10 бесплатных запросов!"
+        return f"Вам доступно ещё {count} бесплатных запросов!"
     else:
         return "Пароль неверный!"

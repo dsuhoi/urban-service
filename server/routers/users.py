@@ -41,9 +41,9 @@ async def bonus_by_token(
 ):
     if token.password == "urban_bonus":
         user.subscription_type = "basic"
-        user.available_requests += 10
+        user.available_requests += token.count
         await db.commit()
 
-        return {"content": "You win +10 queries!"}
+        return {"content": f"You get +{token.count} queries!"}
     else:
         raise HTTPException(status_code=400, detail="Wrong token!")

@@ -5,13 +5,18 @@ from aiogram.filters.command import Command
 from aiogram.types import BotCommand, Message
 
 import routers.assistant as assistant
+# import routers.payments as payments
 from config import CONFIG
 from core.auth import check_user, free_bonus, registration
+from core.logger import ExceptionLoggingMiddleware
 from core.utils import COMMAND_LIST, description_meta
 
 bot = Bot(token=CONFIG.TG_TOKEN)
 dp = Dispatcher()
 
+dp.message.middleware(ExceptionLoggingMiddleware())
+
+# dp.include_router(payments.router)
 dp.include_router(assistant.router)
 
 

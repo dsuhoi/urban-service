@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # Custom
-urban_server/user_db/
+server/user_db/
+*.log

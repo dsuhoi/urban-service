@@ -6,40 +6,28 @@ urban_chooser_json_schema = {
     "type": "object",
     "properties": {
         "project_title": {
-            "description": "The title of the project (no more than 4-5 words) based on the user's request.",
+            "description": "The title of the project (no more than 4-5 words) based on the user's request",
             "type": "string",
         },
         "base_params": {
-            "description": "Key parameters of the project.",
+            "description": "Key parameters of the project",
             "type": "object",
             "properties": {
                 "function": {
-                    "description": "The function of the object.",
+                    "description": "The function class of the object (like home, office, garden, etc.)",
                     "type": ["string", "null"],
-                    "enum": [
-                        "Жилье",
-                        "Офисы",
-                        "Коммерция / торговля",
-                        "Многофункциональные комплексы",
-                        "ТПУ и инфраструктурные объекты",
-                        "Образование",
-                        "Здравоохранение",
-                        "Спортивные объекты",
-                        "Культурные объекты",
-                        "Временная архитектура и арт-объекты",
-                        "Редевелопмент",
-                        "Благоустройство",
-                        "Интерьеры",
-                        "Мастер-план застройки",
-                    ],
                 },
-                "area": {
-                    "description": "The area of the object (m²).",
-                    "type": ["number", "null"],
-                    "minimum": 1.0,
-                },
+                "tags": {
+                    "description": "Useful tags that characterize an object",
+                    "type": "array",
+                    "items": {
+                        "description": "Tag in the form of 1-2 words",
+                        "type": "string"
+                    },
+                    "maxItems": 4
+                }
             },
-            "required": ["function", "area"],
+            "required": ["function", "tags"],
         },
         "criteria": {
             "description": "Selection criteria for the architectural bureau based on the user's project requirements.",
@@ -49,19 +37,13 @@ urban_chooser_json_schema = {
                     "description": "Required experience of the bureau: established firms (10+ years on the market), young names (less than 10 years), specific project experience (if specific expertise is needed).",
                     "type": ["string", "null"],
                     "enum": [
-                        "Опытные бюро",
-                        "Молодые имена",
-                        "Опыт реализации проектов",
-                        "Не важен",
+                        "Great experience",
+                        "Little experience",
+                        "Not important",
                     ],
                 },
-                "altitude": {
-                    "description": "Specialization of the bureau by building height (150m+, 50-150m, or under 50m).",
-                    "type": ["string", "null"],
-                    "enum": ["High", "Medium", "Low"],
-                },
                 "tags": {
-                    "description": "Tags characterizing the bureau for the project.",
+                    "description": "Useful and important tags characterizing the bureau for the project/object.",
                     "type": "array",
                     "items": {"type": "string"},
                     "minItems": 3,
@@ -71,7 +53,7 @@ urban_chooser_json_schema = {
             "required": ["experience", "altitude", "tags"],
         },
         "correction": {
-            "description": "Used when there are null parameters or criteria and is intended for additional questions to the user.",
+            "description": "Used when there are null parameters or criteria and is intended for additional questions to the user. If the user feels confident in the input request, then always return null!",
             "type": ["array", "null"],
             "items": {
                 "description": "A question for the user to fill in an unknown (null) parameter or criterion (MANDATORY).",

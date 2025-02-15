@@ -13,7 +13,7 @@ router = Router()
 
 async def create_report(text: str, tags: list[str], user_id: int) -> str:
     data = await aioreq.request_json(
-        "/report",
+        "/report/",
         "POST",
         json={"input": text, "tags": tags},
         auth=tg_auth_cred(user_id),
@@ -42,7 +42,7 @@ async def assistant(message: Message) -> str:
         )
 
     resp = await aioreq._request(
-        "/assistant/visual" if message.photo else "/assistant",
+        "/assistant/visual" if message.photo else "/assistant/",
         method="POST",
         json=None if data else {"input": message.text},
         data=data,
@@ -63,7 +63,7 @@ async def assistant(message: Message) -> str:
             if corr
             else await create_report(
                 message.text,
-                [result["response"]["base_params"]["function"]]
+                [result["response"]["base_params"]["function"]] + result["response"]["base_params"]["tags"]
                 + result["response"]["criteria"]["tags"],
                 user_id,
             )
@@ -83,4 +83,5 @@ async def assistant(message: Message) -> str:
 @router.message(lambda msg: msg.text not in ["/" + k for k in COMMAND_LIST.keys()])
 async def any_message(message: Message):
     await message.bot.send_chat_action(message.chat.id, ChatAction.TYPING)
-    await message.answer(await assistant(message), parse_mode="Markdown")
+    response = await assistant(message)
+    await message.answer(response, parse_mode="Markdown")
